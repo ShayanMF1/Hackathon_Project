@@ -1,34 +1,28 @@
 import React, { Fragment } from 'react';
-import {Buton, Table} from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import "bootstrap/dist/css/bootstrap.min.css";
-import Employees from './Employees';
-import {Link,useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-function Home(){
+function Home({ Employees, setEmployees }) {
+    // const Employees = props.Employees;
+    // const { Employees } = props;
 
     let history = useNavigate();
 
-    const handleEdit = (id , name , age) => {
-        localStorage.setItem('Name',name);
-        localStorage.setItem('Age',age);
-        localStorage.setItem('Id',id);
+    const handleEdit = (id, name, age) => {
+        localStorage.setItem('Name', name);
+        localStorage.setItem('Age', age);
+        localStorage.setItem('Id', id);
     }
 
-    const handleDelete = (id) = {
-        var index = Employees.map(function(e){
-            return e.id
-        }).indexOf(id);
-
-        Employees.splice(index,1);
-
-        history('/');
-
-
+    const handleDelete = async (id) => {
+        // await axios.delete("http://localhost:4494/api/delete/" + id);
+        setEmployees(currentEmployees => Employees.filter(e => e. id !== id));
     }
 
-    return(
+    return (
         <Fragment>
-            <div style={{margin:"10rem"}}>
+            <div style={{ margin: "10rem" }}>
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
@@ -45,31 +39,30 @@ function Home(){
                     </thead>
                     <tbody>
                         {
-                            Employees && Employees.length > 0
-                            ?
-                            Employees.map((item) => {
-                                return(
-                                    <tr>
-                                        <td>
-                                            {item.Name}
-                                        </td>
-                                        <td>
-                                            {item.Age}
-                                        </td>
-                                        <td>
-                                            <Link to={'/edit'}>
-                                            <Button onClick={() => handleEdit(item.id, item.Name. item.Age)}>Edit</Button>    
-                                            </Link>
-                                            &nbsp;
-                                            <Button onClick={() => handleDelete(item.id)}>DELETE</Button>
-                                        </td>
-                                    </tr>
-                                )
-                            })
-                            :
-                            "No data available"                
+                            (Employees && Employees.length > 0)
+                                ?
+                                Employees.map(({id, name, age}) => {
+                                    return (
+                                        <tr>
+                                            <td>
+                                                {name}
+                                            </td>
+                                            <td>
+                                                {age}
+                                            </td>
+                                            <td>
+                                                <Link to={'/edit'}>
+                                                    <Button onClick={() => handleEdit(id, name, age)}>Edit</Button>
+                                                </Link>
+                                            <Button onClick={() => handleDelete(id)}>DELETE</Button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                                :
+                                "No data available"
                         }
-                    </tbody>                    
+                    </tbody>
                 </Table>
                 <br>
                 </br>
